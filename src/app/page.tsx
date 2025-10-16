@@ -423,8 +423,8 @@ export default function HomePage() {
               <div className="text-sm text-white/70">© {new Date().getFullYear()} Base Reserve</div>
             </div>
             <div className="flex items-center gap-4 text-sm text-white/70">
-              <a href="https://x.com/" target="_blank" rel="noreferrer" className="hover:text-white">X / Twitter</a>
-              <a href="https://t.me/" target="_blank" rel="noreferrer" className="hover:text-white">Telegram</a>
+              <a href="https://x.com/basereservegold" target="_blank" rel="noreferrer" className="hover:text-white">X / Twitter</a>
+              <a href="https://t.me/BaseReserveGold" target="_blank" rel="noreferrer" className="hover:text-white">Telegram</a>
               <a href={BASESCAN} target="_blank" rel="noreferrer" className="hover:text-white">BaseScan</a>
             </div>
           </div>

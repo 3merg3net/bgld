@@ -8,7 +8,15 @@ export default function HomePage() {
   const BASESCAN = process.env.NEXT_PUBLIC_BASESCAN_URL || "#";
   const DEXSCREENER = process.env.NEXT_PUBLIC_DEXSCREENER_URL || ""; // e.g. https://dexscreener.com/base/<pair>?embed=1&theme=dark
   const SWAP_IFRAME = process.env.NEXT_PUBLIC_SWAP_IFRAME_URL || ""; // e.g. https://app.uniswap.org/#/swap?...&embed=1
-  const CONTRACT = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
+  const CONTRACT =
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+    "0x0000000000000000000000000000000000000000";
+
+  // ---- Staking app URL (separate repo) ----
+  const STAKE_URL =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3001" // if you run the staking repo locally
+      : "https://stake.basereserve.gold"; // live
 
   // ---- UI state ----
   const [scrolled, setScrolled] = useState(false);
@@ -41,25 +49,27 @@ export default function HomePage() {
     <>
       {/* Optional local banknote-style font. Place /public/fonts/federal.ttf */}
       <style jsx global>{`
-  @font-face {
-    font-family: "CashCurrency";
-    src: url("/fonts/cash-currency.ttf") format("truetype");
-    font-weight: 400 800;
-    font-style: normal;
-    font-display: swap;
-  }
-  .currency-font {
-    font-family: "CashCurrency", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-    letter-spacing: 0.02em;
-  }
-  .glow-gold {
-    text-shadow: 0 0 10px rgba(255, 200, 0, 0.35), 0 0 22px rgba(255, 200, 0, 0.25);
-  }
-  .glow-blue {
-    text-shadow: 0 0 10px rgba(0, 112, 255, 0.35), 0 0 22px rgba(0, 112, 255, 0.25);
-  }
-`}</style>
-
+        @font-face {
+          font-family: "CashCurrency";
+          src: url("/fonts/cash-currency.ttf") format("truetype");
+          font-weight: 400 800;
+          font-style: normal;
+          font-display: swap;
+        }
+        .currency-font {
+          font-family: "CashCurrency", ui-serif, Georgia, Cambria,
+            "Times New Roman", Times, serif;
+          letter-spacing: 0.02em;
+        }
+        .glow-gold {
+          text-shadow: 0 0 10px rgba(255, 200, 0, 0.35),
+            0 0 22px rgba(255, 200, 0, 0.25);
+        }
+        .glow-blue {
+          text-shadow: 0 0 10px rgba(0, 112, 255, 0.35),
+            0 0 22px rgba(0, 112, 255, 0.25);
+        }
+      `}</style>
 
       {/* GLOBAL BACKDROP */}
       <div className="fixed inset-0 -z-20">
@@ -83,7 +93,11 @@ export default function HomePage() {
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 text-sm font-medium text-white">
           <div className="flex items-center gap-3">
-            <img src="/logos/bgld-seal.png" alt="Base Gold emblem" className="h-7 w-7" />
+            <img
+              src="/logos/bgld-seal.png"
+              alt="Base Gold emblem"
+              className="h-7 w-7"
+            />
             <span className="tracking-wider">
               <span className="currency-font text-[1.05rem] font-semibold">
                 <span className="text-[#0AA0FF] glow-blue">BASE</span>{" "}
@@ -94,11 +108,21 @@ export default function HomePage() {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-5">
-            <a href="#utility" className="hover:text-amber-300">Utility</a>
-            <a href="#vault" className="hover:text-amber-300">Staking Vault</a>
-            <a href="#nfts" className="hover:text-amber-300">Certificates</a>
-            <a href="#tokenomics" className="hover:text-amber-300">Tokenomics</a>
-            <a href="#history" className="hover:text-amber-300">History</a>
+            <a href="#utility" className="hover:text-amber-300">
+              Utility
+            </a>
+            <a href="#vault" className="hover:text-amber-300">
+              Staking Vault
+            </a>
+            <a href="#nfts" className="hover:text-amber-300">
+              Certificates
+            </a>
+            <a href="#tokenomics" className="hover:text-amber-300">
+              Tokenomics
+            </a>
+            <a href="#history" className="hover:text-amber-300">
+              History
+            </a>
             <a
               href={DEX}
               target="_blank"
@@ -116,7 +140,12 @@ export default function HomePage() {
             onClick={() => setMenuOpen(true)}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M4 7h16M4 12h16M4 17h16" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </nav>
@@ -131,7 +160,9 @@ export default function HomePage() {
           <div className="flex items-center justify-between px-4 py-3 text-white border-b border-white/10">
             <div className="flex items-center gap-3">
               <img src="/logos/bgld-seal.png" alt="BGLD" className="h-6 w-6" />
-              <span className="currency-font text-amber-300 font-semibold">BASE GOLD</span>
+              <span className="currency-font text-amber-300 font-semibold">
+                BASE GOLD
+              </span>
             </div>
             <button
               aria-label="Close menu"
@@ -139,7 +170,12 @@ export default function HomePage() {
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 bg-white/10"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M6 6l12 12M18 6l-12 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                <path
+                  d="M6 6l12 12M18 6l-12 12"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           </div>
@@ -203,7 +239,8 @@ export default function HomePage() {
               <span className="text-amber-300 glow-gold">GOLD</span>
             </h1>
             <p className="mt-3 text-lg md:text-xl text-white/90">
-              The Digital Reserve of Base — <span className="text-amber-300 glow-gold">Backed OnChain</span>.
+              The Digital Reserve of Base —{" "}
+              <span className="text-amber-300 glow-gold">Backed OnChain</span>.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -240,16 +277,34 @@ export default function HomePage() {
               Utility — Digital Reserve Model
             </h2>
             <p className="mt-3 text-center text-white/75 max-w-3xl mx-auto">
-              A reserve metaphor for Base: scarce supply, transparent ledgers, and culture-grade collateral—built for on-chain life.
+              A reserve metaphor for Base: scarce supply, transparent ledgers,
+              and culture-grade collateral—built for on-chain life.
             </p>
             <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
               {[
-                { title: "Reserve Unit", headline: "$BGLD", body: "Programmable reserve token on Base." },
-                { title: "Leaderboard", headline: "Bars & Ranks", body: "Snapshot prestige + allowlists." },
-                { title: "Certificates", headline: "NFT Notes", body: "Engraved Reserve NFTs (soon)." },
+                {
+                  title: "Reserve Unit",
+                  headline: "$BGLD",
+                  body: "Programmable reserve token on Base.",
+                },
+                {
+                  title: "Leaderboard",
+                  headline: "Bars & Ranks",
+                  body: "Snapshot prestige + allowlists.",
+                },
+                {
+                  title: "Certificates",
+                  headline: "NFT Notes",
+                  body: "Engraved Reserve NFTs (soon).",
+                },
               ].map((c, i) => (
-                <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                  <div className="text-sm uppercase tracking-widest text-white/60">{c.title}</div>
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                >
+                  <div className="text-sm uppercase tracking-widest text-white/60">
+                    {c.title}
+                  </div>
                   <div className="currency-font mt-2 text-2xl font-extrabold text-amber-300 glow-gold">
                     {c.headline}
                   </div>
@@ -260,19 +315,46 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* STAKING VAULT — stacked widgets */}
+        {/* STAKING VAULT — stacked widgets (UPDATED with staking link) */}
         <section id="vault" className="border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="currency-font text-2xl font-bold tracking-wide text-amber-300 glow-gold">Staking Vault (Coming Soon)</h2>
+            <h2 className="currency-font text-2xl font-bold tracking-wide text-amber-300 glow-gold">
+              Staking Vault (Coming Soon)
+            </h2>
             <p className="mt-3 text-white/80 max-w-3xl">
-              Lock $BGLD into the **Vault** to earn status and unlock collectible utilities. Epochs, bars, ceremonial unlocks, and a
-              Reserve dashboard for clean on-chain proofs.
+              Lock $BGLD into the <strong>Vault</strong> to earn status and
+              unlock collectible utilities. Epochs, bars, ceremonial unlocks,
+              and a Reserve dashboard for clean on-chain proofs.
             </p>
             <ul className="mt-5 space-y-2 text-white/80">
               <li>• Epoch-based staking windows</li>
               <li>• Cosmetic perks & allowlist privileges</li>
               <li>• On-chain proofs + Reserve UI</li>
             </ul>
+
+            {/* NEW: direct link to staking app */}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={STAKE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl bg-amber-400/90 px-5 py-3 font-semibold text-black hover:bg-amber-300"
+              >
+                Go to Staking
+              </a>
+              <a
+                href="/how-it-works"
+                className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10"
+              >
+                How it works
+              </a>
+              <a
+                href="/how-to"
+                className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10"
+              >
+                How to stake
+              </a>
+            </div>
 
             {/* Dexscreener (stacked) */}
             <div className="mt-10">
@@ -287,7 +369,8 @@ export default function HomePage() {
                   />
                 ) : (
                   <div className="h-[120px] rounded-lg border border-white/10 bg-white/5 p-4 text-sm text-white/60">
-                    Set <code>NEXT_PUBLIC_DEXSCREENER_URL</code> to embed Dexscreener here.
+                    Set <code>NEXT_PUBLIC_DEXSCREENER_URL</code> to embed
+                    Dexscreener here.
                   </div>
                 )}
               </div>
@@ -306,7 +389,8 @@ export default function HomePage() {
                   />
                 ) : (
                   <div className="h-[120px] rounded-lg border border-white/10 bg-white/5 p-4 text-sm text-white/60">
-                    Set <code>NEXT_PUBLIC_SWAP_IFRAME_URL</code> to embed a swap widget here (Uniswap/Aerodrome).
+                    Set <code>NEXT_PUBLIC_SWAP_IFRAME_URL</code> to embed a swap
+                    widget here (Uniswap/Aerodrome).
                   </div>
                 )}
               </div>
@@ -349,8 +433,9 @@ export default function HomePage() {
                   Reserve Certificates (NFTs) — Launching Soon
                 </h2>
                 <p className="mt-3 text-white/80">
-                  Engraved, serialized **Reserve Notes** on Base. Claim windows reference snapshots of vault participation
-                  and on-chain activity.
+                  Engraved, serialized **Reserve Notes** on Base. Claim windows
+                  reference snapshots of vault participation and on-chain
+                  activity.
                 </p>
                 <ul className="mt-5 space-y-2 text-white/80">
                   <li>• Engraved note design • unique serials</li>
@@ -365,8 +450,12 @@ export default function HomePage() {
         {/* TOKENOMICS */}
         <section id="tokenomics" className="border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="currency-font text-center text-2xl font-bold tracking-wide text-amber-300 glow-gold">Tokenomics</h2>
-            <p className="mt-2 text-center text-white/75">Reserve-inspired issuance with transparent rails.</p>
+            <h2 className="currency-font text-center text-2xl font-bold tracking-wide text-amber-300 glow-gold">
+              Tokenomics
+            </h2>
+            <p className="mt-2 text-center text-white/75">
+              Reserve-inspired issuance with transparent rails.
+            </p>
             <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-4">
               {[
                 { h: "1,000,000,000", s: "Total Supply", b: "Fixed supply on Base." },
@@ -374,8 +463,13 @@ export default function HomePage() {
                 { h: "LP Locked", s: "Liquidity", b: "Transparency first." },
                 { h: "Renounced", s: "Ownership", b: "Immutable core." },
               ].map((k, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <div className="currency-font text-2xl font-extrabold text-amber-300 glow-gold">{k.h}</div>
+                <div
+                  key={i}
+                  className="rounded-xl border border-white/10 bg-white/5 p-6"
+                >
+                  <div className="currency-font text-2xl font-extrabold text-amber-300 glow-gold">
+                    {k.h}
+                  </div>
                   <div className="mt-2 text-sm text-white/65">{k.s}</div>
                   <p className="mt-3 text-sm text-white/80">{k.b}</p>
                 </div>
@@ -392,23 +486,31 @@ export default function HomePage() {
             </h2>
             <div className="mt-8 space-y-6">
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
-                <summary className="cursor-pointer list-none font-semibold">Why a “digital reserve”?</summary>
+                <summary className="cursor-pointer list-none font-semibold">
+                  Why a “digital reserve”?
+                </summary>
                 <p className="mt-2 text-white/80">
-                  Classic reserves used vault ledgers and metal scarcity. On Base, transparent contracts and programmatic
-                  policy model similar discipline—without trucks or vaults.
+                  Classic reserves used vault ledgers and metal scarcity. On
+                  Base, transparent contracts and programmatic policy model
+                  similar discipline—without trucks or vaults.
                 </p>
               </details>
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
-                <summary className="cursor-pointer list-none font-semibold">What backs the system?</summary>
+                <summary className="cursor-pointer list-none font-semibold">
+                  What backs the system?
+                </summary>
                 <p className="mt-2 text-white/80">
-                  Culture, participation, and programmable rules: a community narrative with on-chain proofs,
-                  framed in Reserve iconography.
+                  Culture, participation, and programmable rules: a community
+                  narrative with on-chain proofs, framed in Reserve iconography.
                 </p>
               </details>
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
-                <summary className="cursor-pointer list-none font-semibold">Why Base?</summary>
+                <summary className="cursor-pointer list-none font-semibold">
+                  Why Base?
+                </summary>
                 <p className="mt-2 text-white/80">
-                  Low fees, throughput, and thriving culture — perfect rails for a living, meme-native Reserve metaphor.
+                  Low fees, throughput, and thriving culture — perfect rails for
+                  a living, meme-native Reserve metaphor.
                 </p>
               </details>
             </div>
@@ -419,17 +521,45 @@ export default function HomePage() {
         <footer className="border-t border-white/10">
           <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-10 md:flex-row md:justify-between">
             <div className="flex items-center gap-3">
-              <img src="/logos/bgld-seal.png" alt="Base Gold emblem" className="h-9 w-9" />
-              <div className="text-sm text-white/70">© {new Date().getFullYear()} Base Reserve</div>
+              <img
+                src="/logos/bgld-seal.png"
+                alt="Base Gold emblem"
+                className="h-9 w-9"
+              />
+              <div className="text-sm text-white/70">
+                © {new Date().getFullYear()} Base Reserve
+              </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-white/70">
-              <a href="https://x.com/basereservegold" target="_blank" rel="noreferrer" className="hover:text-white">X / Twitter</a>
-              <a href="https://t.me/BaseReserveGold" target="_blank" rel="noreferrer" className="hover:text-white">Telegram</a>
-              <a href={BASESCAN} target="_blank" rel="noreferrer" className="hover:text-white">BaseScan</a>
+              <a
+                href="https://x.com/basereservegold"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                X / Twitter
+              </a>
+              <a
+                href="https://t.me/BaseReserveGold"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                Telegram
+              </a>
+              <a
+                href={BASESCAN}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                BaseScan
+              </a>
             </div>
           </div>
           <p className="px-4 pb-8 text-center text-white/65 text-xs max-w-3xl mx-auto">
-            For informational and entertainment purposes only. Nothing here is an offer, solicitation, or financial advice.
+            For informational and entertainment purposes only. Nothing here is
+            an offer, solicitation, or financial advice.
           </p>
         </footer>
       </main>
@@ -439,11 +569,19 @@ export default function HomePage() {
         onClick={scrollToTop}
         aria-label="Scroll to top"
         className={`fixed bottom-6 right-6 z-40 rounded-full border border-amber-400/40 bg-amber-400/20 p-3 text-amber-200 backdrop-blur-sm transition-all hover:bg-amber-400/30 hover:text-amber-50 ${
-          showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+          showTop
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-3 pointer-events-none"
         }`}
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M12 5l-6 6m6-6l6 6M12 5v14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M12 5l-6 6m6-6l6 6M12 5v14"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
     </>

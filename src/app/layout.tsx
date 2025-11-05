@@ -1,5 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import HeaderMarketing from "@/components/HeaderMarketing";   // ⬅️ add
+import Footer from "@/components/Footer";
+
 
 const siteName = "BASE GOLD — $BGLD";
 const siteDesc = "The Digital Fort Knox of Base. Legal tender for meme value only.";
@@ -36,9 +39,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#0B0F14] text-white antialiased">
-       
-       
-       
+        {/* Fixed marketing header (matches staking vibe) */}
+      
+        <HeaderMarketing />
+         
+
         {/* GLOBAL TEXTURE BACKDROP */}
         <div className="fixed inset-0 -z-10 pointer-events-none">
           <img
@@ -48,7 +53,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             className="h-full w-full object-cover opacity-10 mix-blend-overlay"
           />
         </div>
+
         {children}
+
+        {/* Staking-style footer */}
+        <Footer />
       </body>
     </html>
   );

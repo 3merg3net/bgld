@@ -1,30 +1,79 @@
+/* Tailwind v4 entry */
 @import "tailwindcss";
 
+/* === THEME / TOKENS === */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Brand */
+  --gold: #d4af37;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Force dark site-wide (match staking) */
+  --background: #0a0a0a;
+  --foreground: #f8fafc;
+
+  /* keep your font tokens if you use them elsewhere */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Optional: if you previously had a light theme, remove or ignore it.
+   We deliberately do NOT switch on prefers-color-scheme here so the site
+   always renders dark like stake.basereserve.gold. */
 
+/* === GLOBAL SURFACE === */
 body {
-  background: var(--background);
+  /* staking-style radial gold over deep black */
+  background:
+    radial-gradient(1200px 700px at 50% -10%, rgba(212,175,55,0.10), transparent)
+    var(--background);
   color: var(--foreground);
+  /* keep your system fallback; Tailwind utilities will override per-element */
   font-family: Arial, Helvetica, sans-serif;
 }
-html {
-  scroll-behavior: smooth;
+
+html { scroll-behavior: smooth; }
+
+/* If you keep the textured backdrop image in layout.tsx, it will layer on top nicely. */
+
+
+/* === EFFECTS / UTILITIES (staking vibe) === */
+
+/* Gold text glow */
+@keyframes gold-glow {
+  0%, 100% { text-shadow: 0 0 10px #d4af37, 0 0 20px #f9e076; }
+  50%      { text-shadow: 0 0 25px #ffd700, 0 0 50px #ffedb3; }
+}
+.text-glow-gold { animation: gold-glow 3s ease-in-out infinite; }
+
+/* Button pulse ring */
+@keyframes pulseGold {
+  0%   { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(212,175,55,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+}
+.animate-pulseGold { animation: pulseGold 2s infinite; }
+
+/* Loading bar shimmer (if needed) */
+@keyframes loadingbar {
+  0%   { transform: translateX(-120%); }
+  50%  { transform: translateX(10%); }
+  100% { transform: translateX(120%); }
 }
 
+/* Glass header surface (used by header) */
+.headerGlass {
+  background: rgba(10,17,32,0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Card surface to match staking (if you use the .card class anywhere) */
+.card {
+  border-radius: 1rem;             /* ~ rounded-2xl */
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(24,24,27,0.4);  /* ~ bg-zinc-900/40 */
+  padding: 1.5rem;                 /* p-6 */
+  color: var(--foreground);
+}
+
+/* Range/slider accent matches gold */
+input[type="range"] { accent-color: var(--gold); }

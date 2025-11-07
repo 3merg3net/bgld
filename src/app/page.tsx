@@ -159,10 +159,10 @@ export default function Page() {
         <section id="utility" className="border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16">
             <h2 className="text-center text-2xl font-bold tracking-wide text-amber-300">
-              Utility — Digital Reserve Model
+              Utility — Digital Staking Vault Reserve Model
             </h2>
             <p className="mt-3 text-center text-white/75 max-w-3xl mx-auto">
-              A reserve metaphor for Base: scarce supply, transparent ledgers,
+              A On-Chain Gold Reserve for Base: scarce supply, transparent ledgers,
               and culture-grade collateral—built for on-chain life.
             </p>
             <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -170,17 +170,17 @@ export default function Page() {
                 {
                   title: 'Reserve Unit',
                   headline: '$BGLD',
-                  body: 'Programmable reserve token on Base.',
+                  body: 'Digital Gold Reserve token on Base.',
                 },
                 {
                   title: 'Vaults',
                   headline: 'Stake & Earn',
-                  body: 'Flexible + time-locked positions now live.',
+                  body: 'Flexible + time-locked positions earning Massive Rewards.',
                 },
                 {
                   title: 'Certificates',
                   headline: 'Reserve NFTs',
-                  body: 'Engraved notes (post-stake utilities).',
+                  body: 'Engraved notes Coming Soon.',
                 },
               ].map((c) => (
                 <div key={c.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -201,7 +201,7 @@ export default function Page() {
         <section id="vault" className="border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16">
             <h2 className="text-2xl font-bold tracking-wide text-amber-300">
-              Base Gold Staking Vaults — Earn Huge Rewards 
+              Base Gold Staking Vaults — Earn Huge Rewards over 1000% APR
             </h2>
 
             {/* Matched copy tone from staking site */}
@@ -258,7 +258,7 @@ export default function Page() {
         <section id="tokenomics" className="border-t border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16">
             <h2 className="text-center text-2xl font-bold tracking-wide text-amber-300">
-              Tokenomics
+              $BGLD Safu Tokenomics
             </h2>
             <p className="mt-2 text-center text-white/75">
               CA: 0x0bBcAA0921da25ef216739e8dBbFD988875E81B4
@@ -284,7 +284,7 @@ export default function Page() {
         <section id="history" className="border-t border-white/10">
           <div className="mx-auto max-w-5xl px-4 py-16">
             <h2 className="text-center text-2xl font-bold tracking-wide text-amber-300">
-              History & Parallels — Gold Reserves ↔ Base
+              History & Trust — Gold Reserves ↔ Base
             </h2>
             <div className="mt-8 space-y-6">
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
@@ -292,8 +292,8 @@ export default function Page() {
                   Why a “digital reserve”?
                 </summary>
                 <p className="mt-2 text-white/80">
-                  Classic reserves used vault ledgers and metal scarcity. On Base, transparent
-                  contracts and programmatic policy model similar discipline—without trucks or vaults.
+                  Classic Gold reserves using Gold vault ledgers and metal scarcity. On Base, transparent
+                  contracts and Digital Gold Reserve Vaults model Use discipline without Trading Risk, Stake and Earn Passive Income while Holding in Gold Vaults.
                 </p>
               </details>
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
@@ -301,8 +301,8 @@ export default function Page() {
                   What backs the system?
                 </summary>
                 <p className="mt-2 text-white/80">
-                  Culture, participation, and programmable rules: a community narrative with on-chain
-                  proofs, framed in Reserve iconography.
+                  Culture, participation, and Reward Staking Model: a community narrative with Base on-chain
+                  proofs, framed in Base Gold Reserve Lore.
                 </p>
               </details>
               <details className="group rounded-xl border border-white/10 bg-white/5 p-5">
@@ -311,7 +311,7 @@ export default function Page() {
                 </summary>
                 <p className="mt-2 text-white/80">
                   Low fees, throughput, and thriving culture — perfect rails for a living, meme-native
-                  Reserve metaphor.
+                  Gold Reserve Model.
                 </p>
               </details>
             </div>

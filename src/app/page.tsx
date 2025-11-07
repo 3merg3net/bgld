@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import MetricsStrip from '@/components/MetricsStrip';
 import StatusStrip from '@/components/StatusStrip';
 import GoldTicker from '@/components/GoldTicker';
-import ClaimsStrip from '@/components/ClaimsStrip';
+import ClaimsStripLite from '@/components/ClaimsStripLite';
 
 type VaultStats = {
   tvl?: number;
@@ -111,7 +111,7 @@ export default function Page() {
 
           {/* Dexscreener-fed chips (shared component used in staking app) */}
           <div className="mx-auto max-w-6xl px-4 pb-6">
-            <ClaimsStrip className="mt-6" />
+            <ClaimsStripLite className="mt-6" />
             <MetricsStrip />
           </div>
 

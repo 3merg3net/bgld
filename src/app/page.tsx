@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import MetricsStrip from '@/components/MetricsStrip';
 import StatusStrip from '@/components/StatusStrip';
 import GoldTicker from '@/components/GoldTicker';
+import ClaimsStrip from '@/components/ClaimsStrip';
 
 type VaultStats = {
   tvl?: number;
@@ -96,6 +97,7 @@ export default function Page() {
               alt="Base Gold seal"
               className="mx-auto mb-6 h-64 w-64"
             />
+            
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-wide">
               <span className="text-[#0AA0FF]">BASE</span>{' '}
               <span className="text-amber-300">GOLD</span>
@@ -109,6 +111,7 @@ export default function Page() {
 
           {/* Dexscreener-fed chips (shared component used in staking app) */}
           <div className="mx-auto max-w-6xl px-4 pb-6">
+            <ClaimsStrip className="mt-6" />
             <MetricsStrip />
           </div>
 

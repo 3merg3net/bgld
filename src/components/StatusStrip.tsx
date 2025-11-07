@@ -6,7 +6,7 @@ import { createPublicClient, http, formatUnits } from 'viem';
 // ---------- ENV ----------
 const BGLD = (process.env.NEXT_PUBLIC_BGLD_ADDRESS || process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || '').trim().toLowerCase();
 const STAKING = (process.env.NEXT_PUBLIC_STAKING_ADDRESS || '').trim().toLowerCase(); // optional, for TVL
-const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || '8453'); // Base mainnet by default
+
 
 // Minimal chain (we only need rpc url; viem will still work for read)
 const baseRpc = process.env.NEXT_PUBLIC_BASE_RPC || 'https://mainnet.base.org';

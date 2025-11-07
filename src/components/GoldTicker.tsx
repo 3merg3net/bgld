@@ -42,6 +42,7 @@ export default function GoldTicker({ className = '' }: { className?: string }) {
     : '—';
 
   return (
+    
     <div className={`w-full border-b border-white/10 bg-[#0B0F14]/80 backdrop-blur headerGlass`}>
       <div className="mx-auto max-w-6xl px-3 sm:px-4">
         <div className="flex items-center gap-3 py-2 text-xs">

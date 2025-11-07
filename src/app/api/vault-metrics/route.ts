@@ -1,41 +1,53 @@
+// src/app/api/vault-metrics/route.ts
 import { NextResponse } from 'next/server';
 import { createPublicClient, http } from 'viem';
+import { base } from 'viem/chains';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const BGLD = (process.env.NEXT_PUBLIC_BGLD_ADDRESS || '').trim() as `0x${string}`;
 const STAKING = (process.env.NEXT_PUBLIC_STAKING_ADDRESS || '').trim() as `0x${string}`;
-const RPC     = (process.env.NEXT_PUBLIC_BASE_RPC || '').trim();
+const RPC = (process.env.NEXT_PUBLIC_BASE_RPC || '').trim();
 
-const ABI_NEXTID = [
-  { type: 'function', name: 'nextId',      stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
+const ERC20_ABI = [
+  { type: 'function', name: 'decimals', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] },
+  { type: 'function', name: 'balanceOf', stateMutability: 'view', inputs: [{ name: 'account', type: 'address' }], outputs: [{ type: 'uint256' }] },
 ] as const;
-const ABI_TVL = [
-  { type: 'function', name: 'bgldBalance', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
+
+const STAKING_ABI = [
+  { type: 'function', name: 'nextId', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
 ] as const;
 
 export async function GET() {
-  if (!STAKING || !RPC) {
-    return NextResponse.json({ ok: false, error: 'Missing STAKING or RPC' }, { status: 400 });
+  if (!BGLD || !STAKING) {
+    return NextResponse.json({ ok: false, error: 'Missing NEXT_PUBLIC_BGLD_ADDRESS or NEXT_PUBLIC_STAKING_ADDRESS' }, { status: 400 });
   }
-  try {
-    const client = createPublicClient({ transport: http(RPC, { timeout: 10_000 }) });
 
-    const [nid, tvlWei] = await Promise.all([
-      client.readContract({ address: STAKING, abi: ABI_NEXTID, functionName: 'nextId' }) as Promise<bigint>,
-      client.readContract({ address: STAKING, abi: ABI_TVL,   functionName: 'bgldBalance' }) as Promise<bigint>,
+  try {
+    const client = createPublicClient({
+      chain: base,
+      transport: http(RPC || 'https://base.meowrpc.com', { timeout: 10_000 }),
+    });
+
+    const [decimalsRaw, tvlBgldRaw, nextIdRaw] = await Promise.all([
+      client.readContract({ address: BGLD, abi: ERC20_ABI, functionName: 'decimals' }),
+      client.readContract({ address: BGLD, abi: ERC20_ABI, functionName: 'balanceOf', args: [STAKING] }),
+      client.readContract({ address: STAKING, abi: STAKING_ABI, functionName: 'nextId' }),
     ]);
 
-    const totalStakes = nid > BigInt(0) ? nid - BigInt(1) : BigInt(0);
+    const decimals = typeof decimalsRaw === 'number' ? decimalsRaw : Number(decimalsRaw);
+    const tvlBgld = (tvlBgldRaw as bigint).toString();
+    const nextId = typeof nextIdRaw === 'bigint' ? Number(nextIdRaw) : Number(nextIdRaw);
+    const totalStakes = Math.max(0, nextId - 1); // all-time positions created
 
     return NextResponse.json({
       ok: true,
-      partial: true, // only minimal data here by design
-      decimals: 18,
-      totalStakes: totalStakes.toString(),
-      tvlBgld: tvlWei.toString(),
+      decimals,
+      tvlBgld,        // string in token smallest units
+      totalStakes,    // number
     });
-  } catch (e: any) {
-    return NextResponse.json({ ok: false, error: 'rpc read failed', message: e?.message || String(e) }, { status: 502 });
+  } catch (e) {
+    return NextResponse.json({ ok: false, error: (e as Error).message }, { status: 500 });
   }
 }

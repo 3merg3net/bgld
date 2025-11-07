@@ -2,43 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-/** ---------- Types for existing API routes ---------- */
-type DexData = {
-  priceUsd?: number;
-};
+type DexData = { priceUsd?: number };
+type MetricsData = { ok?: boolean; decimals?: number; tvlBgld?: string; totalStakes?: number | string };
+type WithdrawalsData = { ok?: boolean; decimals?: number; withdrawalsToUsers?: string; partial?: boolean };
 
-type MetricsData = {
-  ok?: boolean;
-  decimals?: number;
-  tvlBgld?: string;            // integer string in token smallest units
-  totalStakes?: number | string;
-};
-
-/** Optional: present only if you add /api/vault-withdrawals */
-type WithdrawalsData = {
-  ok?: boolean;
-  decimals?: number;
-  withdrawalsToUsers?: string; // integer string in token smallest units
-  partial?: boolean;
-};
-
-/** ---------- Small helpers ---------- */
 function money(n?: number | null, digits = 0): string {
   if (n == null || !Number.isFinite(n)) return '—';
-  return n.toLocaleString(undefined, {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: digits,
-  });
+  return n.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: digits });
 }
-
 function num(n?: number | null, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—';
   if (Math.abs(n) >= 1) return n.toLocaleString(undefined, { maximumFractionDigits: digits });
   return Number(n).toPrecision(6);
 }
-
-/** Convert integer token-unit string → JS number (for display) */
 function fromUnitsStr(amount: string | undefined, decimals: number): number | null {
   if (!amount) return null;
   try {
@@ -53,78 +29,58 @@ function fromUnitsStr(amount: string | undefined, decimals: number): number | nu
   }
 }
 
-/** ---------- UI ---------- */
 export default function ClaimsStripLite({ className = '' }: { className?: string }) {
   const [priceUsd, setPriceUsd] = useState<number | null>(null);
   const [tvlBgld, setTvlBgld] = useState<number | null>(null);
   const [totalStakes, setTotalStakes] = useState<number | null>(null);
-  const [rewardsBgld, setRewardsBgld] = useState<number | null>(null); // optional
+  const [rewardsBgld, setRewardsBgld] = useState<number | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    let stopped = false;
 
-    async function load() {
+    const loadDex = async () => {
       try {
-        const [dexRes, metRes] = await Promise.all([
-          fetch('/api/bgld-dex', { cache: 'no-store' }),
-          fetch('/api/vault-metrics', { cache: 'no-store' }),
-        ]);
-
-        // Dex
-        if (dexRes.ok) {
-          const dexJson = (await dexRes.json()) as DexData;
-          if (Number.isFinite(dexJson?.priceUsd ?? NaN)) {
-            setPriceUsd(dexJson.priceUsd as number);
-          }
-        }
-
-        // Metrics (TVL + Total Stakes)
-        if (metRes.ok) {
-          const metJson = (await metRes.json()) as MetricsData;
-          if (metJson?.ok) {
-            const dec = Number(metJson.decimals ?? 18) || 18;
-            setTvlBgld(fromUnitsStr(metJson.tvlBgld, dec));
-            setTotalStakes(
-              metJson.totalStakes != null ? Number(metJson.totalStakes) : null
-            );
-          }
-        }
-
-        // OPTIONAL: Rewards via withdrawals endpoint (ignore if missing)
-       // Rewards Paid (uses /api/vault-withdrawals if present)
-try {
-  const wdRes = await fetch('/api/vault-withdrawals', { cache: 'no-store' });
-  if (wdRes.ok) {
-    const wdJson = await wdRes.json() as WithdrawalsData;
-    console.log('Vault withdrawals JSON:', wdJson);
-
-    // Check for numeric string value
-    const raw = wdJson?.withdrawalsToUsers;
-    if (raw && /^\d+$/.test(raw)) {
-      const dec = Number(wdJson.decimals ?? 18) || 18;
-      const parsed = fromUnitsStr(raw, dec);
-      if (parsed && parsed > 0) {
-        setRewardsBgld(parsed);
-      }
-    }
-  } else {
-    console.warn('Withdrawals route not OK:', wdRes.status);
-  }
-} catch (e) {
-  console.warn('Withdrawals route failed:', e);
-}
-
-      } catch {
-        // swallow — keep last known values
-      }
-    }
-
-    load();
-    const id = setInterval(load, 60_000);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
+        const r = await fetch('/api/bgld-dex', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = (await r.json()) as DexData;
+        if (!stopped && Number.isFinite(j?.priceUsd)) setPriceUsd(j.priceUsd!);
+      } catch {/* keep last */}
     };
+
+    const loadMetrics = async () => {
+      try {
+        const r = await fetch('/api/vault-metrics', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = (await r.json()) as MetricsData;
+        if (!stopped && j?.ok) {
+          const dec = Number(j.decimals ?? 18) || 18;
+          const tvl = fromUnitsStr(j.tvlBgld, dec);
+          if (tvl != null) setTvlBgld(tvl);
+          if (j.totalStakes != null) setTotalStakes(Number(j.totalStakes));
+        }
+      } catch {/* keep last */}
+    };
+
+    const loadWithdrawals = async () => {
+      try {
+        const r = await fetch('/api/vault-withdrawals', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = (await r.json()) as WithdrawalsData;
+        const raw = j?.withdrawalsToUsers;
+        if (!stopped && raw && /^\d+$/.test(raw)) {
+          const dec = Number(j.decimals ?? 18) || 18;
+          const n = fromUnitsStr(raw, dec);
+          // only set if we parsed a finite number; do NOT clear previous good value on failure
+          if (n != null && Number.isFinite(n)) setRewardsBgld(prev => (n > 0 ? n : prev));
+        }
+      } catch {/* keep last */}
+    };
+
+    // Fire them independently
+    loadDex(); loadMetrics(); loadWithdrawals();
+    const id = setInterval(() => { loadDex(); loadMetrics(); loadWithdrawals(); }, 60_000);
+
+    return () => { stopped = true; clearInterval(id); };
   }, []);
 
   const tvlUsd = useMemo(
@@ -149,28 +105,18 @@ try {
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ${className}`}>
       <Card
-        label="Total Vaults"
+        label="Total Staked Vaults"
         value={totalStakes != null ? totalStakes.toLocaleString() : '—'}
       />
-
       <Card
-        label="TVL"
+        label="Vaults TVL"
         value={tvlBgld != null ? `${num(tvlBgld, 2)} BGLD` : '—'}
         sub={tvlUsd != null ? money(tvlUsd, tvlUsd >= 1 ? 0 : 2) : undefined}
       />
-
       <Card
-  label="Rewards Paid"
-  value={
-    rewardsBgld != null
-      ? `${num(rewardsBgld, 2)} BGLD`
-      : '—'
-  }
-  sub={
-    rewardsBgld != null && priceUsd != null
-      ? money(rewardsBgld * priceUsd, (rewardsBgld * priceUsd) >= 1 ? 0 : 2)
-      : undefined
-  }
+        label="Pending Rewards"
+        value={rewardsBgld != null ? `${num(rewardsBgld, 2)} BGLD` : '—'}
+        sub={rewardsUsd != null ? money(rewardsUsd, rewardsUsd >= 1 ? 0 : 2) : undefined}
       />
     </div>
   );

@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
+
+
 import "./globals.css";
 import type { Metadata } from "next";
 import HeaderMarketing from "@/components/HeaderMarketing";   // ⬅️ add

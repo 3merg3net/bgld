@@ -12,7 +12,7 @@ const STAKING = (process.env.NEXT_PUBLIC_STAKING_ADDRESS || '').trim().toLowerCa
 const baseRpc = process.env.NEXT_PUBLIC_BASE_RPC || 'https://mainnet.base.org';
 const client = createPublicClient({ transport: http(baseRpc) });
 
-// ---------- ABIs (views only) ----------
+// ---------- ABIs (views only) -----------
 const ERC20_ABI = [
   { type: 'function', name: 'decimals', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] },
   { type: 'function', name: 'totalSupply', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },

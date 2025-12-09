@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 
 
 const siteName = "BASE GOLD — $BGLD";
-const siteDesc = "The Digital Fort Knox of Base. Legal tender for meme value only.";
+const siteDesc = "A decentralized reserve protocol on Base, offering staking, transparent supply mechanics, and utility across a full gaming ecosystem.";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://basereserve.gold";
 
 export const metadata: Metadata = {
@@ -20,20 +20,20 @@ export const metadata: Metadata = {
     description: siteDesc,
     url: siteUrl,
     siteName,
-    images: ["/og/og-bgld.png"],
+    images: ["/og/og-Image.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: siteName,
     description: siteDesc,
-    images: ["/og/og-bgld.png"],
+    images: ["/og/og-image.png"],
   },
   icons: {
     icon: [{ url: "/favicon.ico" }],
     other: [
-      { rel: "icon", url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
-      { rel: "icon", url: "/icons/icon-512.png", type: "image/png", sizes: "512x512" },
+      { rel: "icon", url: "/logos/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "icon", url: "/logos/icon-512.png", type: "image/png", sizes: "512x512" },
     ],
   },
 };

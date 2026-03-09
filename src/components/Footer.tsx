@@ -7,7 +7,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="w-full border-t border-white/10 bg-black/80 backdrop-blur-md py-12 text-center relative overflow-hidden">
+    <footer className="relative w-full overflow-hidden border-t border-white/10 bg-black/80 py-12 text-center backdrop-blur-md">
       {/* Gold ambient glow */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24 opacity-25 blur-3xl"
@@ -20,46 +20,43 @@ export default function Footer() {
 
       <div className="relative flex flex-col items-center justify-center space-y-5">
         {/* Tagline */}
-        <p className="text-[13px] sm:text-sm tracking-wide text-amber-300/90 font-semibold uppercase">
-          The Digital Fort Knox of Base — Join the Vault
+        <p className="text-[13px] font-semibold uppercase tracking-wide text-amber-300/90 sm:text-sm">
+          The Digital Reserve of Base
         </p>
 
         {/* Logo */}
-        <Link
-          href="https://stake.basereserve.gold"
-          className="group relative w-16 h-16 sm:w-20 sm:h-20"
-        >
+        <Link href="/" className="group relative h-16 w-16 sm:h-20 sm:w-20">
           <Image
             src="/logo.png"
             alt="Base Gold"
             fill
-            className="object-contain transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]"
+            className="object-contain drop-shadow-[0_0_8px_rgba(212,175,55,0.6)] transition-transform duration-300 group-hover:scale-110"
           />
         </Link>
 
         {/* Contact + Copyright */}
-        <div className="text-sm text-white/60 leading-relaxed">
+        <div className="leading-relaxed text-sm text-white/60">
           <p>
             © {year}{' '}
             <a
               href="mailto:BaseReserveGold@gmail.com"
-              className="text-amber-300 font-semibold hover:text-amber-200 transition-colors"
+              className="font-semibold text-amber-300 transition-colors hover:text-amber-200"
             >
               BaseReserveGold@gmail.com
             </a>
           </p>
           <p className="mt-1 text-xs text-white/40">
-            Built on Base • Powered by ETH • Secured by the Vault
+            Built on Base • Powered by ETH • Transparent on-chain
           </p>
         </div>
 
         {/* Links */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-3 text-xs text-white/50">
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-6 text-xs text-white/50">
           <Link
             href="https://basescan.org/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-amber-300 transition-colors"
+            className="transition-colors hover:text-amber-300"
           >
             BaseScan
           </Link>
@@ -67,23 +64,23 @@ export default function Footer() {
             href="https://x.com/BaseReserveGold"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-amber-300 transition-colors"
+            className="transition-colors hover:text-amber-300"
           >
             X (Twitter)
           </Link>
           <Link
-            href="https://stake.basereserve.gold/terms"
-            target="_blank"
-            className="hover:text-amber-300 transition-colors"
+            href="/how-it-works"
+            className="transition-colors hover:text-amber-300"
           >
-            Terms
+            How It Works
           </Link>
           <Link
-            href="https://stake.basereserve.gold/how-it-works"
+            href={process.env.NEXT_PUBLIC_DEX_URL || '#'}
             target="_blank"
-            className="hover:text-amber-300 transition-colors"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-amber-300"
           >
-            Mechanics
+            Buy $BGLD
           </Link>
         </div>
       </div>
